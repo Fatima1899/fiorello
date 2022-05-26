@@ -1,12 +1,17 @@
 $(document).ready(function () {
-    let skip = 8;
+    let skip = 2;
     $(document).on('click', '#loadmore', function () {
+    let productCount = $("#productCount").val();
         $.ajax({
             method: "get",
             url: "product/loadmore?skip="+skip,
             success: function (res) {
-                console.log(res);
-                //$("#listProduct").append(res);
+                skip += 2;
+                //console.log(res);
+                $("#listProduct").append(res);
+                if (skip > productCount) {
+                  $("#loadmore").remove();
+                }
             }
         })
     })

@@ -16,15 +16,14 @@ namespace fiorello.Controllers
         }
         public IActionResult Index()
         {
-            List<Product>products = _context.products.Include(p => p.Category).OrderByDescending(p=>p.Id).Take(8).ToList();
+            ViewBag.ProductCount = _context.products.Count();
+            List<Product>products = _context.products.Include(p => p.Category).OrderByDescending(p=>p.Id).Take(2).ToList();
             return View(products);
         }
         public IActionResult LoadMore(int skip)
         {
-            List<Product> products = _context.products.Include(p => p.Category).Skip(skip).Take(8).ToList();
-            return Json(new{
-                name="kamal"
-            });
+            List<Product> products = _context.products.Include(p => p.Category).Skip(skip).Take(2).ToList();
+            return PartialView("_ProductPartial",products);
         }
     }
 }

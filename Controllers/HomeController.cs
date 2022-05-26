@@ -21,7 +21,6 @@ namespace fiorello.Controllers
             homeVM.sliders= _context.sliders.ToList();
             homeVM.pageIntro= _context.pageIntros.FirstOrDefault();
             homeVM.categories = _context.categories.ToList();
-            homeVM.products = _context.products.Include(p=>p.Category).ToList();
             return View(homeVM);
         }
     }
