@@ -21,6 +21,7 @@
   <ItemGroup>
     <Folder Include="Areas\AdminF\Data\" />
     <Folder Include="Areas\AdminF\Models\" />
+    <Folder Include="wwwroot\img\slider\" />
   </ItemGroup>
 
 </Project>
