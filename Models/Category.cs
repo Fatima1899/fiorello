@@ -9,7 +9,7 @@ namespace fiorello.Models
         [Required(ErrorMessage ="dont empty"),MaxLength(10,ErrorMessage ="10dan yuxari ola bilmez")]
         public string Name { get; set; }
         [MaxLength(50, ErrorMessage = "50den yuxari ola bilmez")]
-        public string Desc { get; set; }
-        public IEnumerable <Product> Products { get; set; }
+        public string Description{ get; set; }
+        public List<Product> Products { get; set; }
     }
 }

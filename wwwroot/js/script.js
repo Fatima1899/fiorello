@@ -17,6 +17,20 @@ $(document).ready(function () {
     })
     // HEADER
 
+      // search
+    $(document).on("keyup", "#search-input", function () {
+        let inputVal = $(this).val().trim();
+        $("#searchList li").slice(1).remove();
+        $.ajax({
+            method: "get",
+            url: "product/searchproduct?search=" + inputVal,
+            success: function (res) {
+                $("#searchList").append(res);
+            }
+        })
+    })
+   
+
     $(document).on('click', '#search', function () {
         $(this).next().toggle();
     })

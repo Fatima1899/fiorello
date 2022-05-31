@@ -58,7 +58,7 @@ namespace fiorello.Areas.AdminF.Controllers
             }
             Category newcategory = new Category();
             newcategory.Name = category.Name;
-            newcategory.Desc = category.Desc;
+            newcategory.Description = category.Description;
             await _context.categories.AddAsync(newcategory);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -93,7 +93,7 @@ namespace fiorello.Areas.AdminF.Controllers
             }
             if (dbCategory == null) return NotFound();
             dbCategory.Name = category.Name;
-            dbCategory.Desc = category.Desc;
+            dbCategory.Description = category.Description;
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
