@@ -4,8 +4,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <main>
-
-        <!-- SLIDER START -->
+    @if (TempData["Fail"] != null)
+    {
+        <div class="alert alert-danger" id="failAlert" role="alert">
+        @TempData["Fail"]
+        </div> 
+    }
+    <!-- SLIDER START -->
         <input id="controllerName" type="hidden" value="home"/>
 
         <section id="slider">
@@ -331,3 +336,11 @@
         <!-- INSTAGRAM END -->
 
     </main>
+    @section Scripts{
+        <script>
+            let alertDiv=document.getElementById("failAlert");
+            setTimeout(function(){
+                alertDiv.remove()
+            },3000)
+        </script>
+    }
