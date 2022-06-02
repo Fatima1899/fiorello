@@ -94,5 +94,77 @@ namespace fiorello.Controllers
             }
             return View(updatesproducts);
         }
+        public IActionResult RemoveItem(int?id)
+        {
+            if (id == null) return NotFound();
+            string basket = Request.Cookies["basket"];
+            List<BasketProduct> basketProducts = JsonConvert.DeserializeObject<List<BasketProduct>>(basket);
+
+            BasketProduct existProduct = basketProducts.FirstOrDefault(p => p.Id ==id);
+
+            if (existProduct == null) return NotFound();
+
+            basketProducts.Remove(existProduct);
+
+            Response.Cookies.Append("basket", JsonConvert.SerializeObject(basketProducts), new CookieOptions { MaxAge = TimeSpan.FromMinutes(20) });
+            return RedirectToAction(nameof(Basket));
+            
+
+        }
+        public IActionResult Plus(int? id)
+        {
+            if (id == null) return NotFound();
+
+            string basket = Request.Cookies["basket"];
+            List<BasketProduct> basketProducts = JsonConvert.DeserializeObject<List<BasketProduct>>(basket);
+
+            BasketProduct existProduct = basketProducts.FirstOrDefault(p => p.Id == id);
+
+            if (existProduct == null) return NotFound();
+
+            Product dbproduct = _context.products.FirstOrDefault(p => p.Id == id);
+
+            if (dbproduct.Count > existProduct.Count)
+            {
+                existProduct.Count++;
+            }
+            else
+            {
+                    TempData["Fail"] = "not enough count";
+                    return RedirectToAction("Basket", "Basket");
+            }
+
+            Response.Cookies.Append("basket", JsonConvert.SerializeObject(basketProducts), new CookieOptions { MaxAge = TimeSpan.FromMinutes(20) });
+            return RedirectToAction(nameof(Basket));
+
+
+        }
+        public IActionResult Minus(int? id)
+        {
+            if (id == null) return NotFound();
+
+            string basket = Request.Cookies["basket"];
+            List<BasketProduct> basketProducts = JsonConvert.DeserializeObject<List<BasketProduct>>(basket);
+
+            BasketProduct existProduct = basketProducts.FirstOrDefault(p => p.Id == id);
+
+            if (existProduct == null) return NotFound();
+            if (existProduct.Count > 1)
+            {
+                existProduct.Count--;
+            }
+            else
+            {
+                RemoveItem(existProduct.Id);
+                return RedirectToAction(nameof(Basket));
+            }
+
+            
+
+            Response.Cookies.Append("basket", JsonConvert.SerializeObject(basketProducts), new CookieOptions { MaxAge = TimeSpan.FromMinutes(20) });
+            return RedirectToAction(nameof(Basket));
+
+
+        }
     }
 }
