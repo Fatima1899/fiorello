@@ -95,7 +95,7 @@ namespace fiorello.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("index","home");
+            return RedirectToAction("index", "home");
         }
     }
 }
