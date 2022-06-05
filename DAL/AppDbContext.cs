@@ -1,10 +1,11 @@
 ﻿using fiorello.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
 namespace fiorello.DAL
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<AppUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext>options):base (options)
         {
@@ -17,5 +18,7 @@ namespace fiorello.DAL
         public DbSet<Product> products { get; set; }
         public DbSet<Bio> bios { get; set; }
         public DbSet<Blog> blogs { get; set; }
+        public DbSet<Color> Colors { get; set; }
+        public DbSet<ProductColor> ProductColors { get; set; }
     }
 }
