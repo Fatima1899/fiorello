@@ -65,6 +65,7 @@ namespace fiorello
             app.UseStaticFiles();
             app.UseSession();
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

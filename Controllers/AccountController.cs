@@ -2,7 +2,9 @@
 using fiorello.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
+using static fiorello.Helpers.Helper;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace fiorello.Controllers
@@ -12,11 +14,13 @@ namespace fiorello.Controllers
         private UserManager<AppUser> _userManager ;
 
         private SignInManager<AppUser> _signInManager;
+        private RoleManager<IdentityRole> _roleManager;
 
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
         }
         public IActionResult Index()
         {
@@ -50,7 +54,7 @@ namespace fiorello.Controllers
                 }
                     return View(registerVM);
             }
-
+            await _userManager.AddToRoleAsync(newUser, Roles.Member.ToString());
             await _signInManager.SignInAsync(newUser, true);
 
             return RedirectToAction("index","home");
@@ -63,7 +67,7 @@ namespace fiorello.Controllers
         [HttpPost]
         [AutoValidateAntiforgeryToken]
 
-        public async Task <IActionResult> Login(LoginVM loginVM)
+        public async Task <IActionResult> Login(LoginVM loginVM,string ReturnUrl)
         {
             if (!ModelState.IsValid) return View();
 
@@ -73,10 +77,8 @@ namespace fiorello.Controllers
                 ModelState.AddModelError("", "email or password wrong");
                 return View(loginVM);
             }
+
             SignInResult result = await _signInManager.PasswordSignInAsync(dbUser,loginVM.Password,loginVM.RememberMe,true);
-
-
-
 
             if (result.IsLockedOut)
             {
@@ -89,13 +91,36 @@ namespace fiorello.Controllers
                 ModelState.AddModelError("", "email or password wrong");
                 return View(loginVM);
             }
-            return RedirectToAction("index", "home");
+            foreach (var item in await _userManager.GetRolesAsync(dbUser))
+            {
+                if (item.Contains(Roles.Admin.ToString()))
+                {
+                    return RedirectToAction("index", "dashboard", new { area = "adminF" });
+                }
+            }
+           
+            if (ReturnUrl == null)
+            {
+                return RedirectToAction("index", "home");
+            }
+            return Redirect(ReturnUrl);
         }
 
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("index", "home");
+        }
+
+        public async Task CreateRole()
+        {
+            foreach (var item in Enum.GetValues(typeof(Roles)))
+            {
+                if (!await _roleManager.RoleExistsAsync(item.ToString()))
+                {
+                    await _roleManager.CreateAsync(new IdentityRole { Name = item.ToString() });
+                }
+            }
         }
     }
 }

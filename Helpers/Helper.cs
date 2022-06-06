@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using System;
 using System.IO;
 
 namespace fiorello.Helpers
@@ -14,6 +15,12 @@ namespace fiorello.Helpers
             {
                 System.IO.File.Delete(resultPath);
             }
+        }
+        public enum Roles
+        {
+            Admin,
+            Member,
+            SuperAdmin
         }
     }
 }
